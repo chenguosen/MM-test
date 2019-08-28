@@ -1,0 +1,148 @@
+*** Settings ***
+Suite Setup
+Suite Teardown    Delete All Sessions
+Library           Collections
+Library           String
+Library           RequestsLibrary
+Library           OperatingSystem
+Library           XML
+Resource          ../Resource/AddXmlContent.robot
+Resource          ../Resource/basekeyword.robot
+Resource          ../Resource/GlobalVariables.robot
+Library           FtpLibrary
+Library           Myimport
+Library           DatabaseLibrary
+
+*** Test Cases ***
+01.HW-CreateApplication
+    [Documentation]    平台合作标准模式-创建应用接口
+    #上传XML所需的文件
+    ftpConnect    ${ftphost}    ${ftpusername}    ${ftppassword}
+    Upload File    ${CopyRightAttach}
+    FTP CLOSE
+    #获取XML模板
+    ${c}    GetXmlFile    ${CURDIR}${/}createApp.xml
+    #设置报文字段值
+    CreateApplication    ${c}
+    #发送报文
+    ${response}    PostXml    ${c}    ${ApmsUrl}    ${createAppUri}
+    ${res}    get element text    ${response}    RspCode
+    ${contentid}    get element text    ${response}    APPID
+    Set Suite Variable    ${contentid}
+    ${tid}    get element text    ${response}    TransactionId
+    Should Be Equal    ${tid}    ${transationid}
+    Should Be Equal    ${res}    0
+
+02.HW-CreateProgram
+    [Documentation]    平台合作标准模式-创建程序包接口
+    #获取XML模板
+    ${c}    GetXmlFile    ${CURDIR}${/}createProgram.xml
+    #设置报文字段值
+    CreateProgram    ${c}
+    #发送报文
+    ${response}    PostXml    ${c}    ${ApmsUrl}    ${createProgramUri}
+    ${res}    get element text    ${response}    RspCode
+    log    ${res}
+    ${pid}    get element text    ${response}    PID
+    Set Suite Variable    ${pid}
+    ${tid}    get element text    ${response}    TransactionId
+    Should Be Equal    ${tid}    ${transationid}
+    Should Be Equal    ${res}    0
+
+03.HW-CreatetPayCode
+    [Documentation]    平台合作标准模式-申请计费点接口
+    #获取XML模板
+    ${c}    GetXmlFile    ${CURDIR}${/}createPayCode.xml
+    #设置报文字段值
+    CreatePayCode    ${c}
+    #发送报文
+    ${response}    PostXml    ${c}    ${ApmsUrl}    ${createPayCodeUri}
+    ${res}    get element text    ${response}    RspCode
+    log    ${res}
+    ${tid}    get element text    ${response}    TransactionId
+    Should Be Equal    ${tid}    ${transationid}
+    Should Be Equal    ${res}    0
+    TestPayCode
+
+04.HW-UploadProgram
+    [Documentation]    平台合作标准模式-上传程序包接口
+    #上传XML所需的文件
+    ftpConnect    ${ftphost}    ${ftpusername}    ${ftppassword}
+    Upload File    ${Program}
+    Upload File    ${LOGO}
+    Upload File    ${Picture1}
+    Upload File    ${Picture2}
+    Upload File    ${KeyStore}
+    FTP CLOSE
+    #获取XML模板
+    ${c}    GetXmlFile    ${CURDIR}${/}uploadProgram.xml
+    #设置报文字段值
+    UploadProgram    ${c}
+    #发送报文
+    ${response}    PostXml    ${c}    ${ApmsUrl}    ${uploadProgramUri}
+    ${res}    get element text    ${response}    RspCode
+    ${tid}    get element text    ${response}    TransactionId
+    Should Be Equal    ${tid}    ${transationid}
+    Should Be Equal    ${res}    0
+
+05.TMS-ApplicationTest
+    [Documentation]    TMS-应用信息测试接口
+    #获取XML模板
+    ${c}    GetXmlFile    ${CURDIR}${/}tmsApplicationTest.xml
+    #设置报文字段值
+    tmsApplicationTest    ${c}
+    #发送报文
+    ${response}    PostXml    ${c}    ${PpmsUrl}    ${tmsApptestUri}
+    log    ${response}
+    ${res}    get element text    ${response}    .//RspCode
+    log    ${res}
+    ${tid}    get element text    ${response}    .//TransactionID
+    Should Be Equal    ${tid}    ${transationid}
+    Should Be Equal    ${res}    0
+
+06.TMS-ProgramTest
+    [Documentation]    TMS-程序包测试接口
+    #获取XML模板
+    ${c}    GetXmlFile    ${CURDIR}${/}tmsprogramTest.xml
+    #设置报文字段值
+    tmsProgramTest    ${c}
+    #发送报文
+    ${response}    PostXml    ${c}    ${PpmsUrl}    ${tmsProgramTestUri}
+    log    ${response}
+    ${res}    get element text    ${response}    .//RspCode
+    log    ${res}
+    ${tid}    get element text    ${response}    .//TransactionID
+    Should Be Equal    ${tid}    ${transationid}
+    Should Be Equal    ${res}    0
+
+07.CheckOrderStatus
+    [Documentation]    应用测试结果查询接口--计费点是否自测试通过
+    #获取XML模板
+    ${c}    GetXmlFile    ${CURDIR}${/}checkOrderStatus.xml
+    #设置报文字段值
+    checkOrderStatus    ${c}
+    #发送报文
+    ${response}    PostXml    ${c}    ${ApmsUrl}    ${checkOrderStatusUri}
+    log    ${response}
+    ${res}    get element text    ${response}    .//RspCode
+    log    ${res}
+    ${tid}    get element text    ${response}    TransactionId
+    Should Be Equal    ${tid}    ${transationid}
+    Should Be Equal    ${res}    0
+
+08.CheckAppInfomation
+    [Documentation]    应用信息查询接口
+    #获取XML模板
+    ${c}    GetXmlFile    ${CURDIR}${/}checkAppInfomation.xml
+    #设置报文字段值
+    CheckAppInfomation    ${c}
+    #发送报文
+    ${response}    PostXml    ${c}    ${ApmsUrl}    ${checkAppInfomationUri}
+    log    ${response}
+    ${res}    get element text    ${response}    .//RspCode
+    log    ${res}
+    ${tid}    get element text    ${response}    TransactionId
+    Should Be Equal    ${tid}    ${transationid}
+    Should Be Equal    ${res}    0
+
+*** Keywords ***

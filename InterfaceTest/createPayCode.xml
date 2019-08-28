@@ -1,0 +1,28 @@
+<PayCodeRequest>
+<TransactionId>201782194753</TransactionId>
+<PltID>2015</PltID>
+<MD5sign>D7511B55B805B18C012F12C2A9B6290E</MD5sign>
+<APPID>300005933006</APPID>
+<PayCodeReqInfos>
+  <PayCodeReqInfo>
+   <PayCodeName><![CDATA[jinbi]]></PayCodeName>
+   <PayCodeType>02</PayCodeType>
+   <Days></Days>
+   <Fee>1000</Fee>
+<AuthFlag>0</AuthFlag >
+   <AuthURL></AuthURL>
+   <SyncsubsURL><![CDATA[http://mm.10086.cn]]></SyncsubsURL>
+<PayCodeIndex>1</PayCodeIndex>
+</PayCodeReqInfo> 
+  <PayCodeReqInfo>
+   <PayCodeName><![CDATA[jinbi]]></PayCodeName>
+   <PayCodeType>01</PayCodeType>
+   <Days></Days>
+   <Fee>1000</Fee>
+<AuthFlag>0</AuthFlag >
+   <AuthURL></AuthURL>
+   <SyncsubsURL><![CDATA[http://mm.10086.cn]]></SyncsubsURL>
+<PayCodeIndex>1</PayCodeIndex>
+</PayCodeReqInfo>
+</PayCodeReqInfos>
+</PayCodeRequest>
